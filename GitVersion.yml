@@ -1,0 +1,19 @@
+mode: ContinuousDeployment
+continuous-delivery-fallback-tag: ''
+branches:
+  develop:
+    tag: dev
+    regex: ^dev$
+    track-merge-target: false
+  main:
+    regex: ^main$
+  release:
+    tag: rc
+    regex: ^releases/
+  feature:
+    regex: ^features/
+  hotfix:
+    tag: rc
+    regex: ^hotfixes/
+  support:
+    regex: ^support/

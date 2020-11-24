@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Project="..\Directory.Build.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;netstandard2.0</TargetFrameworks>
+
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>InjectedTests</Authors>
+    <PackageLicenseExpression>MIT-0</PackageLicenseExpression>
+    <PackageIcon>icon_small.png</PackageIcon>
+    <PackageReadmeFile>nuget.readme.md</PackageReadmeFile>
+    <PackageTags>test;tests;testing;dependencyinjection;dependency-injection;xunit;mstest;nunit;Microsoft.Extensions.DependencyInjection;Microsoft.Extensions.Hosting;Microsoft.AspNetCore.Mvc.Testing</PackageTags>
+    <PackageProjectUrl>https://github.com/InjectedTests/InjectedTests</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/InjectedTests/InjectedTests.git</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\media\icon_small.png" Pack="true" PackagePath="\" />
+    <None Include="$(MSBuildThisFileDirectory)..\nuget.readme.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>

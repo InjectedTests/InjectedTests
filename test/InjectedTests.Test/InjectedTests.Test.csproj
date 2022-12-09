@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\InjectedTests.Extensions.DependencyInjection\InjectedTests.Extensions.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\src\InjectedTests.Extensions.Hosting\InjectedTests.Extensions.Hosting.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <PackageReference Update="Microsoft.Extensions.DependencyInjection" Version="3.1.32" />
+    <PackageReference Update="Microsoft.Extensions.Hosting" Version="3.1.32" />
+  </ItemGroup>
+
+</Project>

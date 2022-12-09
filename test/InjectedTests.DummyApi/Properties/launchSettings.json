@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "InjectedTests.DummyApi": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:60630;http://localhost:60631"
+    }
+  }
+}

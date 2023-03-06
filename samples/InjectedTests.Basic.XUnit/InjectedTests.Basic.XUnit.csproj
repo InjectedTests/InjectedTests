@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <UseXunit>true</UseXunit>
+    <UseExtensionsDependencyInjection>true</UseExtensionsDependencyInjection>
+  </PropertyGroup>
+  
+</Project>

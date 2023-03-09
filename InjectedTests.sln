@@ -1,0 +1,83 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33103.184
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{ECF292F3-E6C0-4DA7-9706-5EEC7716C33A}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6A024C84-7D2D-4584-8C70-89C60BCC7FF5}"
+	ProjectSection(SolutionItems) = preProject
+		src\Directory.Build.props = src\Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{6DF39490-41A2-4303-96C2-6BE043EF1688}"
+	ProjectSection(SolutionItems) = preProject
+		test\Directory.Build.props = test\Directory.Build.props
+		test\Directory.Build.targets = test\Directory.Build.targets
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InjectedTests.Core", "src\InjectedTests.Core\InjectedTests.Core.csproj", "{3460F31D-FDA6-4706-A46B-C690E3A6ECBF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InjectedTests.Test", "test\InjectedTests.Test\InjectedTests.Test.csproj", "{8AA792BF-AE94-4B2B-9493-765746308A07}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InjectedTests.Extensions.DependencyInjection", "src\InjectedTests.Extensions.DependencyInjection\InjectedTests.Extensions.DependencyInjection.csproj", "{A424458B-3CFD-4FCF-90C1-F56FD79DF65D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InjectedTests.Extensions.Hosting", "src\InjectedTests.Extensions.Hosting\InjectedTests.Extensions.Hosting.csproj", "{E9232703-8018-4479-A8A9-9E2A51176896}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InjectedTests.AspNetCore.Mvc.Testing", "src\InjectedTests.AspNetCore.Mvc.Testing\InjectedTests.AspNetCore.Mvc.Testing.csproj", "{A1514F55-AEB9-4F58-A032-1F9331A9C855}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InjectedTests.DummyApi", "test\InjectedTests.DummyApi\InjectedTests.DummyApi.csproj", "{22D46B5C-5034-47A4-9BCC-6593AAE195AE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InjectedTests.Web.Test", "test\InjectedTests.Web.Test\InjectedTests.Web.Test.csproj", "{9AD45057-6DBD-4EFD-B725-130AA83EC4BC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3460F31D-FDA6-4706-A46B-C690E3A6ECBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3460F31D-FDA6-4706-A46B-C690E3A6ECBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3460F31D-FDA6-4706-A46B-C690E3A6ECBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3460F31D-FDA6-4706-A46B-C690E3A6ECBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AA792BF-AE94-4B2B-9493-765746308A07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AA792BF-AE94-4B2B-9493-765746308A07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AA792BF-AE94-4B2B-9493-765746308A07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AA792BF-AE94-4B2B-9493-765746308A07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A424458B-3CFD-4FCF-90C1-F56FD79DF65D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A424458B-3CFD-4FCF-90C1-F56FD79DF65D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A424458B-3CFD-4FCF-90C1-F56FD79DF65D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A424458B-3CFD-4FCF-90C1-F56FD79DF65D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9232703-8018-4479-A8A9-9E2A51176896}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9232703-8018-4479-A8A9-9E2A51176896}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9232703-8018-4479-A8A9-9E2A51176896}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9232703-8018-4479-A8A9-9E2A51176896}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1514F55-AEB9-4F58-A032-1F9331A9C855}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1514F55-AEB9-4F58-A032-1F9331A9C855}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1514F55-AEB9-4F58-A032-1F9331A9C855}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1514F55-AEB9-4F58-A032-1F9331A9C855}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22D46B5C-5034-47A4-9BCC-6593AAE195AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22D46B5C-5034-47A4-9BCC-6593AAE195AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22D46B5C-5034-47A4-9BCC-6593AAE195AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22D46B5C-5034-47A4-9BCC-6593AAE195AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AD45057-6DBD-4EFD-B725-130AA83EC4BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AD45057-6DBD-4EFD-B725-130AA83EC4BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AD45057-6DBD-4EFD-B725-130AA83EC4BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AD45057-6DBD-4EFD-B725-130AA83EC4BC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6A024C84-7D2D-4584-8C70-89C60BCC7FF5} = {ECF292F3-E6C0-4DA7-9706-5EEC7716C33A}
+		{6DF39490-41A2-4303-96C2-6BE043EF1688} = {ECF292F3-E6C0-4DA7-9706-5EEC7716C33A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3A82B5B4-3ECF-4AC0-A379-5244EECC62D1}
+	EndGlobalSection
+EndGlobal

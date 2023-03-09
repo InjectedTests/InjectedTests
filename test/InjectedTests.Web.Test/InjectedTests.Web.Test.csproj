@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net7.0;net6.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\InjectedTests.AspNetCore.Mvc.Testing\InjectedTests.AspNetCore.Mvc.Testing.csproj" />
+    <ProjectReference Include="..\InjectedTests.DummyApi\InjectedTests.DummyApi.csproj" />
+  </ItemGroup>
+
+</Project>

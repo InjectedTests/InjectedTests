@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Project="..\Directory.Build.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net7.0;net48;netcoreapp3.1</TargetFrameworks>
+    <InjectedTestsVersion>0.1.0-rc2</InjectedTestsVersion>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+</Project>

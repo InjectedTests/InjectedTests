@@ -1,6 +1,6 @@
 ﻿namespace InjectedTests;
 
-public abstract class BootstrapperTestBase : IAsyncDisposable
+public abstract class BootstrapperTestBase : IAsyncLifetime
 {
     #region state
 
@@ -14,7 +14,12 @@ public abstract class BootstrapperTestBase : IAsyncDisposable
 
     #region lifecycle
 
-    public async ValueTask DisposeAsync()
+    public Task InitializeAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    public async Task DisposeAsync()
     {
         await BootstrapperDisposable.DisposeAsync();
     }

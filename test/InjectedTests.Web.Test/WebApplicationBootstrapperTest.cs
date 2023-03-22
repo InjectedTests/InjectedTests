@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace InjectedTests;
 
-public sealed class WebApplicationBootstrapperTest : IAsyncDisposable
+public sealed class WebApplicationBootstrapperTest : IAsyncLifetime
 {
     #region state
 
@@ -24,7 +24,12 @@ public sealed class WebApplicationBootstrapperTest : IAsyncDisposable
 
     #region lifecycle
 
-    public async ValueTask DisposeAsync()
+    public Task InitializeAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    public async Task DisposeAsync()
     {
         await bootstrapper.DisposeAsync();
     }

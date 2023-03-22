@@ -1,6 +1,6 @@
 ﻿namespace InjectedTests;
 
-public sealed class BootstrapperStateMachineTest : IAsyncDisposable
+public sealed class BootstrapperStateMachineTest : IAsyncLifetime
 {
     #region state
 
@@ -29,7 +29,12 @@ public sealed class BootstrapperStateMachineTest : IAsyncDisposable
         state = new(new TestBootstrappingStrategy(this));
     }
 
-    public async ValueTask DisposeAsync()
+    public Task InitializeAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    public async Task DisposeAsync()
     {
         if (bootstrapped != null)
         {

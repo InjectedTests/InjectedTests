@@ -4,16 +4,21 @@ using Xunit;
 
 namespace InjectedTests;
 
-public sealed class BasicTest : IAsyncDisposable
+public sealed class BasicTest : IAsyncLifetime
 {
     private readonly ServiceProviderBootstrapper bootstrapper = new ServiceProviderBootstrapper()
         .ConfigureServices(s => s.TryAddSingleton<TestService>());
 
     private TestService Service => bootstrapper.GetRequiredService<TestService>();
 
-    public ValueTask DisposeAsync()
+    public Task InitializeAsync()
     {
-        return bootstrapper.DisposeAsync();
+        return Task.CompletedTask;
+    }
+
+    public async Task DisposeAsync()
+    {
+        await bootstrapper.DisposeAsync();
     }
 
     [Fact]

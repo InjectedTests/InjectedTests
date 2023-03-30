@@ -61,7 +61,7 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-dotnet test -c $Configuration --no-build --no-restore
+dotnet test -c $Configuration --no-build
 if ($LASTEXITCODE -ne 0) {
     exit 1
 }
@@ -76,7 +76,7 @@ if (-not $SkipSamples) {
 if ($Pack -eq $true) {
     Remove-Item * -Recurse -Include *.nupkg
 
-    dotnet pack -c $Configuration -p:Version=$Version --no-build --no-restore
+    dotnet pack -c $Configuration -p:Version=$Version --no-build
     if ($LASTEXITCODE -ne 0) {
         exit 1
     }

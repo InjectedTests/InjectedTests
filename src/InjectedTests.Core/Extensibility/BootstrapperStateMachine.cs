@@ -1,4 +1,6 @@
-﻿namespace InjectedTests.Extensibility;
+﻿using InjectedTests.Internal;
+
+namespace InjectedTests.Extensibility;
 
 public sealed partial class BootstrapperStateMachine<TConfiguration, TBootstrapped> : IAsyncDisposable
     where TConfiguration : class
@@ -16,7 +18,8 @@ public sealed partial class BootstrapperStateMachine<TConfiguration, TBootstrapp
     public TBootstrapped Bootstrapped => Volatile.Read(ref state) switch
     {
         BootstrappedState bootstrapped => bootstrapped.Instance,
-        { } state => SafeWait(state.EnsureBootstrappedAsync()),
+        { } s => WaitableSynchronizationContext
+            .ExecuteOnContext(s.EnsureBootstrappedAsync, CancellationToken.None),
     };
 
     public void Configure(Action<TConfiguration> configure) => Volatile

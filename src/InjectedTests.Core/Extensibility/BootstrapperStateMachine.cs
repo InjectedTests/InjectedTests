@@ -1,4 +1,6 @@
-﻿namespace InjectedTests.Extensibility;
+﻿using InjectedTests.Internal;
+
+namespace InjectedTests.Extensibility;
 
 public sealed partial class BootstrapperStateMachine<TConfiguration, TBootstrapped> : IAsyncDisposable
     where TConfiguration : class
@@ -13,9 +15,12 @@ public sealed partial class BootstrapperStateMachine<TConfiguration, TBootstrapp
         state = new ConfiguringState(this);
     }
 
-    public TBootstrapped Bootstrapped => Volatile
-        .Read(ref state)
-        .EnsureBootstrapped();
+    public TBootstrapped Bootstrapped => Volatile.Read(ref state) switch
+    {
+        BootstrappedState bootstrapped => bootstrapped.Instance,
+        { } s => WaitableSynchronizationContext
+            .ExecuteOnContext(s.EnsureBootstrappedAsync, CancellationToken.None),
+    };
 
     public void Configure(Action<TConfiguration> configure) => Volatile
         .Read(ref state)
@@ -34,39 +39,33 @@ public sealed partial class BootstrapperStateMachine<TConfiguration, TBootstrapp
         }
     }
 
-    private async ValueTask<BootstrappedState> MoveToBootstrappedAsync(ConfiguringState configuring)
+    private async ValueTask<TBootstrapped> MoveToBootstrappedAsync(ConfiguringState configuring)
     {
         var bootstrapping = new BootstrappingState(this, configuring);
-        try
+        var comparedTo = Interlocked.CompareExchange(ref state, bootstrapping, configuring);
+        if (ReferenceEquals(configuring, comparedTo))
         {
-            var exchangedForBootstrapping = Interlocked.CompareExchange(ref state, bootstrapping, configuring);
-            if (!ReferenceEquals(configuring, exchangedForBootstrapping))
-            {
-                throw new InvalidOperationException("Concurrent bootstrapping detected.");
-            }
-
             var bootstrapped = await bootstrapping.Task.ConfigureAwait(false);
             try
             {
-                var exchangedForBootstrapped = Interlocked.CompareExchange(ref state, bootstrapped, bootstrapping);
-                if (!ReferenceEquals(bootstrapping, exchangedForBootstrapped))
+                comparedTo = Interlocked.CompareExchange(ref state, bootstrapped, bootstrapping);
+                if (ReferenceEquals(bootstrapping, comparedTo))
                 {
-                    throw new InvalidOperationException("Concurrent bootstrapping detected.");
+                    var instance = bootstrapped.Instance;
+                    bootstrapped = null;
+                    return instance;
                 }
-
-                return bootstrapped;
             }
-            catch
+            finally
             {
-                await bootstrapped.DisposeAsync().ConfigureAwait(false);
-                throw;
+                if (bootstrapped is not null)
+                {
+                    await bootstrapped.DisposeAsync().ConfigureAwait(false);
+                }
             }
         }
-        catch
-        {
-            await bootstrapping.DisposeAsync().ConfigureAwait(false);
-            throw;
-        }
+
+        return await comparedTo.EnsureBootstrappedAsync().ConfigureAwait(false);
     }
 
     private async ValueTask<BootstrappedState> BootstrapAsync(ConfiguringState configuring)
@@ -85,5 +84,14 @@ public sealed partial class BootstrapperStateMachine<TConfiguration, TBootstrapp
             await bootstrapped.TryDisposeAsync().ConfigureAwait(false);
             throw;
         }
+    }
+
+    private static T SafeWait<T>(ValueTask<T> task)
+    {
+        return task switch
+        {
+            { IsCompleted: true } t => t.Result,
+            { } t => t.AsTask().ConfigureAwait(false).GetAwaiter().GetResult(),
+        };
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace InjectedTests;
 
-public sealed class InitializerTest : IAsyncDisposable
+public sealed class InitializerTest : IAsyncLifetime
 {
     #region state
 
@@ -15,7 +15,12 @@ public sealed class InitializerTest : IAsyncDisposable
 
     #region lifecycle
 
-    public async ValueTask DisposeAsync()
+    public Task InitializeAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    public async Task DisposeAsync()
     {
         await bootstrapper.DisposeAsync();
     }

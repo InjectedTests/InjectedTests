@@ -6,7 +6,7 @@ partial class BootstrapperStateMachine<TConfiguration, TBootstrapped>
     {
         public abstract void Configure(Action<TConfiguration> configure);
 
-        public abstract TBootstrapped EnsureBootstrapped();
+        public abstract ValueTask<TBootstrapped> EnsureBootstrappedAsync();
 
         public abstract ValueTask DisposeAsync();
     }
@@ -34,15 +34,9 @@ partial class BootstrapperStateMachine<TConfiguration, TBootstrapped>
             stateMachine.MoveToConfiguring(this, updated);
         }
 
-        public override TBootstrapped EnsureBootstrapped()
+        public override ValueTask<TBootstrapped> EnsureBootstrappedAsync()
         {
-            var bootstrappedState = stateMachine.MoveToBootstrappedAsync(this) switch
-            {
-                { IsCompleted: true } t => t.Result,
-                { } t => t.AsTask().ConfigureAwait(false).GetAwaiter().GetResult(),
-            };
-
-            return bootstrappedState.Instance;
+            return stateMachine.MoveToBootstrappedAsync(this);
         }
 
         public override ValueTask DisposeAsync()
@@ -77,24 +71,15 @@ partial class BootstrapperStateMachine<TConfiguration, TBootstrapped>
             throw new InvalidOperationException("Configuration is only possible before bootstrapping.");
         }
 
-        public override TBootstrapped EnsureBootstrapped()
+        public async override ValueTask<TBootstrapped> EnsureBootstrappedAsync()
         {
-            throw new InvalidOperationException("Bootstrapping already started.");
+            var bootstrapped = await Task.ConfigureAwait(false);
+            return bootstrapped.Instance;
         }
 
-        public override async ValueTask DisposeAsync()
+        public override ValueTask DisposeAsync()
         {
-            BootstrappedState instance;
-            try
-            {
-                instance = await Task.ConfigureAwait(false);
-            }
-            catch
-            {
-                return;
-            }
-
-            await instance.TryDisposeAsync().ConfigureAwait(false);
+            return default;
         }
 
         private ValueTask<BootstrappedState> BootstrapAsync()
@@ -117,9 +102,9 @@ partial class BootstrapperStateMachine<TConfiguration, TBootstrapped>
             throw new InvalidOperationException("Configuration is only possible before bootstrapping.");
         }
 
-        public override TBootstrapped EnsureBootstrapped()
+        public override ValueTask<TBootstrapped> EnsureBootstrappedAsync()
         {
-            return Instance;
+            return new(Instance);
         }
 
         public override async ValueTask DisposeAsync()
@@ -141,7 +126,7 @@ partial class BootstrapperStateMachine<TConfiguration, TBootstrapped>
             throw new ObjectDisposedException(nameof(DisposedState));
         }
 
-        public override TBootstrapped EnsureBootstrapped()
+        public override ValueTask<TBootstrapped> EnsureBootstrappedAsync()
         {
             throw new ObjectDisposedException(nameof(DisposedState));
         }

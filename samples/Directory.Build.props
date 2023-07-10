@@ -5,7 +5,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net7.0;net48;netcoreapp3.1</TargetFrameworks>
-    <InjectedTestsVersion>1.0.0</InjectedTestsVersion>
+    <InjectedTestsVersion>1.1.0</InjectedTestsVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

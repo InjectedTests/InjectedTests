@@ -35,6 +35,20 @@ public sealed class WaitableSynchronizationContextTest
         Then_SynchronizationContexts_AllCorrect();
     }
 
+    [Fact]
+    public void ExecuteOnContext_SynchronousException_ExceptionThrown()
+    {
+        Given_Work_SynchronousException();
+        Then_Context_ExecuteWorkThrowsException();
+    }
+
+    [Fact]
+    public void ExecuteOnContext_AsynchronousException_ExceptionThrown()
+    {
+        Given_Work_AsynchronousException();
+        Then_Context_ExecuteWorkThrowsException();
+    }
+
     #region given, when, then
 
     private void Given_Work_Synchronous()
@@ -52,6 +66,16 @@ public sealed class WaitableSynchronizationContextTest
         _work = Helper_ExecuteNestedAsynchronousWork;
     }
 
+    private void Given_Work_SynchronousException()
+    {
+        _work = Helper_ExecuteSynchronousException;
+    }
+
+    private void Given_Work_AsynchronousException()
+    {
+        _work = Helper_ExecuteAsynchronousException;
+    }
+
     private void When_Context_ExecuteWork()
     {
         _contexts = WaitableSynchronizationContext.ExecuteOnContext(_work, CancellationToken.None);
@@ -60,6 +84,12 @@ public sealed class WaitableSynchronizationContextTest
     private void Then_SynchronizationContexts_AllCorrect()
     {
         Assert.All(_contexts, c => Assert.IsType<WaitableSynchronizationContext>(c));
+    }
+
+    private void Then_Context_ExecuteWorkThrowsException()
+    {
+        var exception = Assert.Throws<Exception>(When_Context_ExecuteWork);
+        Assert.Equal("boom", exception.Message);
     }
 
     private ValueTask<IReadOnlyList<SynchronizationContext>> Helper_ExecuteSynchronousWork()
@@ -101,6 +131,18 @@ public sealed class WaitableSynchronizationContextTest
         contexts.Add(SynchronizationContext.Current);
 
         return new(contexts);
+    }
+
+    private ValueTask<IReadOnlyList<SynchronizationContext>> Helper_ExecuteSynchronousException()
+    {
+        throw new Exception("boom");
+    }
+
+    private async ValueTask<IReadOnlyList<SynchronizationContext>> Helper_ExecuteAsynchronousException()
+    {
+        await Task.Delay(TimeSpan.FromMilliseconds(1));
+
+        throw new Exception("boom");
     }
 
     #endregion

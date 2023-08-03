@@ -7,9 +7,9 @@ namespace InjectedTests;
 public static class InitializationExtensions
 {
     public static T ConfigureInitializer<T>(this T bootstrapper, Action<InitializerBuilder> configure)
-        where T : IConfigurableBootstrapper
+        where T : IConfigurableDependencies
     {
-        return bootstrapper.ConfigureServices<T>(r => configure(new InitializerBuilder(r)));
+        return bootstrapper.ConfigureDependencies<T>(r => configure(new InitializerBuilder(r)));
     }
 
     public static InitializerBuilder With(this InitializerBuilder builder, Action initializer)

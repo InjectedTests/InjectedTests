@@ -5,7 +5,7 @@ public sealed class InitializerTest : IAsyncLifetime
     #region state
 
     private readonly ServiceProviderBootstrapper bootstrapper = new ServiceProviderBootstrapper()
-        .ConfigureServices(s => s.TryAddSingleton<List<int>>());
+        .ConfigureDependencies(s => s.TryAddSingleton<List<int>>());
 
     private bool isInitialized;
 

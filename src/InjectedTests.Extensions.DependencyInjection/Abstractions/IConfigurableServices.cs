@@ -2,7 +2,7 @@
 
 namespace InjectedTests.Abstractions;
 
-public interface IConfigurableBootstrapper
+public interface IConfigurableServices
 {
     public void ConfigureServices(Action<IServiceCollection> configure);
 }

@@ -7,7 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 namespace InjectedTests;
 
 public sealed class WebApplicationBootstrapper<T> :
-    IConfigurableBootstrapper,
+    IConfigurableDependencies,
+    IConfigurableServices,
     IServiceProvider,
     IAsyncDisposable
     where T : class
@@ -35,7 +36,12 @@ public sealed class WebApplicationBootstrapper<T> :
         return this;
     }
 
-    void IConfigurableBootstrapper.ConfigureServices(Action<IServiceCollection> configure)
+    void IConfigurableDependencies.ConfigureDependencies(Action<IServiceCollection> configure)
+    {
+        ConfigureHost(b => b.ConfigureServices(configure));
+    }
+
+    void IConfigurableServices.ConfigureServices(Action<IServiceCollection> configure)
     {
         ConfigureHost(b => b.ConfigureServices(configure));
     }

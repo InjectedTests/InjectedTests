@@ -8,9 +8,9 @@ namespace InjectedTests;
 public static class ScopingExtensions
 {
     public static T ConfigureTestScope<T>(this T bootstrapper)
-        where T : IConfigurableBootstrapper
+        where T : IConfigurableDependencies
     {
-        return bootstrapper.ConfigureServices<T>(s => s.TryAddSingleton<TestScope>());
+        return bootstrapper.ConfigureDependencies<T>(s => s.TryAddSingleton<TestScope>());
     }
 
     public static IServiceProvider GetScopedServiceProvider(this IServiceProvider rootProvider)

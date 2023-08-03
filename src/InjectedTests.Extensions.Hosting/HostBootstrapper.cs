@@ -6,7 +6,8 @@ using Microsoft.Extensions.Hosting;
 namespace InjectedTests;
 
 public sealed class HostBootstrapper :
-    IConfigurableBootstrapper,
+    IConfigurableDependencies,
+    IConfigurableServices,
     IServiceProvider,
     IAsyncDisposable
 {
@@ -27,7 +28,12 @@ public sealed class HostBootstrapper :
         return this;
     }
 
-    void IConfigurableBootstrapper.ConfigureServices(Action<IServiceCollection> configure)
+    void IConfigurableDependencies.ConfigureDependencies(Action<IServiceCollection> configure)
+    {
+        state.Configure(b => b.HostBuilder.ConfigureServices(configure));
+    }
+
+    void IConfigurableServices.ConfigureServices(Action<IServiceCollection> configure)
     {
         state.Configure(b => b.HostBuilder.ConfigureServices(configure));
     }

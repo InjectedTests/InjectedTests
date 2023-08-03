@@ -5,7 +5,8 @@ using InjectedTests.Extensibility;
 namespace InjectedTests;
 
 public sealed class ServiceProviderBootstrapper :
-    IConfigurableBootstrapper,
+    IConfigurableDependencies,
+    IConfigurableServices,
     IServiceProvider,
     IAsyncDisposable
 {
@@ -28,7 +29,12 @@ public sealed class ServiceProviderBootstrapper :
 
     public object? GetService(Type serviceType) => Services.GetService(serviceType);
 
-    void IConfigurableBootstrapper.ConfigureServices(Action<IServiceCollection> configure)
+    void IConfigurableDependencies.ConfigureDependencies(Action<IServiceCollection> configure)
+    {
+        state.Configure(configure);
+    }
+
+    void IConfigurableServices.ConfigureServices(Action<IServiceCollection> configure)
     {
         state.Configure(configure);
     }

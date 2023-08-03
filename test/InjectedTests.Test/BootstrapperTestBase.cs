@@ -6,7 +6,7 @@ public abstract class BootstrapperTestBase : IAsyncLifetime
 
     private TestService service;
 
-    protected abstract IConfigurableBootstrapper ConfigurableBootstrapper { get; }
+    protected abstract IConfigurableDependencies ConfigurableDependencies { get; }
     protected abstract IAsyncDisposable BootstrapperDisposable { get; }
     protected abstract IServiceProvider ServiceProvider { get; }
 
@@ -57,18 +57,18 @@ public abstract class BootstrapperTestBase : IAsyncLifetime
 
     private void Given_Bootstrapper_ServiceConfigured()
     {
-        ConfigurableBootstrapper.ConfigureServices(s => s.TryAddSingleton<TestService>());
+        ConfigurableDependencies.ConfigureDependencies(s => s.TryAddSingleton<TestService>());
     }
 
     private void Given_Bootstrapper_ScopedServiceConfigured()
     {
-        ConfigurableBootstrapper.ConfigureTestScope();
-        ConfigurableBootstrapper.ConfigureServices(s => s.TryAddScoped<TestService>());
+        ConfigurableDependencies.ConfigureTestScope();
+        ConfigurableDependencies.ConfigureDependencies(s => s.TryAddScoped<TestService>());
     }
 
     private void Given_Bootstrapper_ServiceInitializerConfigured()
     {
-        ConfigurableBootstrapper.ConfigureInitializer(b => b.With<TestService>(Helper_InitializeService));
+        ConfigurableDependencies.ConfigureInitializer(b => b.With<TestService>(Helper_InitializeService));
     }
 
     private void When_Bootstrapper_ResolveService()

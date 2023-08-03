@@ -6,7 +6,7 @@ public sealed class ServiceProviderBootstrapperTest : BootstrapperTestBase
 
     private readonly ServiceProviderBootstrapper bootstrapper = new();
 
-    protected override IConfigurableBootstrapper ConfigurableBootstrapper => bootstrapper;
+    protected override IConfigurableDependencies ConfigurableDependencies => bootstrapper;
     protected override IAsyncDisposable BootstrapperDisposable => bootstrapper;
     protected override IServiceProvider ServiceProvider => bootstrapper;
 

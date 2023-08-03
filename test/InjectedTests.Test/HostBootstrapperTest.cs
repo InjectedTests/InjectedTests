@@ -17,7 +17,7 @@ public sealed class HostBootstrapperTest : BootstrapperTestBase
 
     private readonly List<string> hostedServiceEvents = new();
 
-    protected override IConfigurableBootstrapper ConfigurableBootstrapper => bootstrapper;
+    protected override IConfigurableDependencies ConfigurableDependencies => bootstrapper;
     protected override IAsyncDisposable BootstrapperDisposable => bootstrapper;
     protected override IServiceProvider ServiceProvider => bootstrapper;
 

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting.Internal;
 
 namespace InjectedTests;
 
-public sealed class HostBootstrapperTest : BootstrapperTestBase
+public sealed class HostBootstrapperTest : ServicesBootstrapperTestBase
 {
     #region state
 
@@ -18,6 +18,7 @@ public sealed class HostBootstrapperTest : BootstrapperTestBase
     private readonly List<string> hostedServiceEvents = new();
 
     protected override IConfigurableDependencies ConfigurableDependencies => bootstrapper;
+    protected override IConfigurableServices ConfigurableServices => bootstrapper;
     protected override IAsyncDisposable BootstrapperDisposable => bootstrapper;
     protected override IServiceProvider ServiceProvider => bootstrapper;
 

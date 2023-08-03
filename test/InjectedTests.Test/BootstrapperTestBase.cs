@@ -4,7 +4,7 @@ public abstract class BootstrapperTestBase : IAsyncLifetime
 {
     #region state
 
-    private TestService service;
+    protected TestService service { get; set; }
 
     protected abstract IConfigurableDependencies ConfigurableDependencies { get; }
     protected abstract IAsyncDisposable BootstrapperDisposable { get; }
@@ -44,26 +44,11 @@ public abstract class BootstrapperTestBase : IAsyncLifetime
         Then_Service_Disposed();
     }
 
-    [Fact]
-    public async Task Dispose_DisposeAfterResolveScoped_ScopedServiceDisposed()
-    {
-        Given_Bootstrapper_ScopedServiceConfigured();
-        When_Bootstrapper_ResolveScopedService();
-        await When_Bootstrapper_DisposedAsync();
-        Then_Service_Disposed();
-    }
-
     #region given, when, then
 
     private void Given_Bootstrapper_ServiceConfigured()
     {
         ConfigurableDependencies.ConfigureDependencies(s => s.TryAddSingleton<TestService>());
-    }
-
-    private void Given_Bootstrapper_ScopedServiceConfigured()
-    {
-        ConfigurableDependencies.ConfigureTestScope();
-        ConfigurableDependencies.ConfigureDependencies(s => s.TryAddScoped<TestService>());
     }
 
     private void Given_Bootstrapper_ServiceInitializerConfigured()
@@ -76,17 +61,12 @@ public abstract class BootstrapperTestBase : IAsyncLifetime
         service = ServiceProvider.GetRequiredService<TestService>();
     }
 
-    private void When_Bootstrapper_ResolveScopedService()
-    {
-        service = ServiceProvider.GetRequiredScopedService<TestService>();
-    }
-
     protected async Task When_Bootstrapper_DisposedAsync()
     {
         await BootstrapperDisposable.DisposeAsync();
     }
 
-    private void Then_Service_Disposed()
+    protected void Then_Service_Disposed()
     {
         Assert.True(service.Disposed);
     }
@@ -101,7 +81,7 @@ public abstract class BootstrapperTestBase : IAsyncLifetime
         service.Initialized = true;
     }
 
-    private sealed class TestService : IAsyncDisposable
+    protected sealed class TestService : IAsyncDisposable
     {
         public bool Disposed { get; private set; }
         public bool Initialized { get; set; }

@@ -85,13 +85,4 @@ public sealed partial class BootstrapperStateMachine<TConfiguration, TBootstrapp
             throw;
         }
     }
-
-    private static T SafeWait<T>(ValueTask<T> task)
-    {
-        return task switch
-        {
-            { IsCompleted: true } t => t.Result,
-            { } t => t.AsTask().ConfigureAwait(false).GetAwaiter().GetResult(),
-        };
-    }
 }

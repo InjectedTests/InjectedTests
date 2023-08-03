@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using InjectedTests.Abstractions;
 using InjectedTests.Extensibility;
+using InjectedTests.Internal;
 
 namespace InjectedTests;
 
@@ -29,9 +30,9 @@ public sealed class ServiceProviderBootstrapper :
 
     public object? GetService(Type serviceType) => Services.GetService(serviceType);
 
-    void IConfigurableDependencies.ConfigureDependencies(Action<IServiceCollection> configure)
+    void IConfigurableDependencies.ConfigureDependencies(Action<IDependencyBuilder> configure)
     {
-        state.Configure(configure);
+        state.Configure(s => configure(new ServiceDependencyBuilder(s)));
     }
 
     void IConfigurableServices.ConfigureServices(Action<IServiceCollection> configure)

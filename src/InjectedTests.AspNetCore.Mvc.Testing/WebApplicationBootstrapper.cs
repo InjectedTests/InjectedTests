@@ -1,5 +1,6 @@
 ﻿using InjectedTests.Abstractions;
 using InjectedTests.Extensibility;
+using InjectedTests.Internal;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,9 +37,9 @@ public sealed class WebApplicationBootstrapper<T> :
         return this;
     }
 
-    void IConfigurableDependencies.ConfigureDependencies(Action<IServiceCollection> configure)
+    void IConfigurableDependencies.ConfigureDependencies(Action<IDependencyBuilder> configure)
     {
-        ConfigureHost(b => b.ConfigureServices(configure));
+        ConfigureHost(b => b.ConfigureServices(s => configure(new ServiceDependencyBuilder(s))));
     }
 
     void IConfigurableServices.ConfigureServices(Action<IServiceCollection> configure)

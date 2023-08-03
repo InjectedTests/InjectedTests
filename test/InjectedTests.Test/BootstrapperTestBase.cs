@@ -48,7 +48,8 @@ public abstract class BootstrapperTestBase : IAsyncLifetime
 
     private void Given_Bootstrapper_ServiceConfigured()
     {
-        ConfigurableDependencies.ConfigureDependencies(s => s.TryAddSingleton<TestService>());
+        ConfigurableDependencies.ConfigureDependencies(d =>
+            d.TryAdd(DependencyDefinition.CreateSingleton<TestService, TestService>()));
     }
 
     private void Given_Bootstrapper_ServiceInitializerConfigured()

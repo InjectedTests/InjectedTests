@@ -1,27 +1,34 @@
 ﻿using InjectedTests.Abstractions;
 using InjectedTests.Internal;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace InjectedTests;
 
 public sealed class InitializerBuilder
 {
-    public InitializerBuilder(IServiceCollection services)
+    public InitializerBuilder(IDependencyBuilder dependencies)
     {
-        Services = services;
+        Dependencies = dependencies;
     }
 
-    public IServiceCollection Services { get; }
+    public IDependencyBuilder Dependencies { get; }
 
     public InitializerBuilder With(Func<ValueTask> initializer)
     {
-        Services.AddTransient<IInitializer>(p => ActivatorUtilities.CreateInstance<Initializer>(p, initializer));
+        var definition = DependencyDefinition.CreateTransient<IInitializer, Initializer>(p => new Initializer(initializer));
+        Dependencies.AddEnumerable(definition);
         return this;
     }
 
     public InitializerBuilder With<T>(Func<T, ValueTask> initializer)
     {
-        Services.AddTransient<IInitializer>(p => ActivatorUtilities.CreateInstance<Initializer<T>>(p, initializer));
+        var definition = DependencyDefinition.CreateTransient<IInitializer, Initializer<T>>(p => CreateInitializer(p, initializer));
+        Dependencies.AddEnumerable(definition);
         return this;
+    }
+
+    private Initializer<T> CreateInitializer<T>(IServiceProvider services, Func<T, ValueTask> initializer)
+    {
+        var dependencies = services.GetRequiredService<T>();
+        return new(initializer, dependencies);
     }
 }

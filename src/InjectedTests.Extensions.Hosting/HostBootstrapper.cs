@@ -1,5 +1,6 @@
 ﻿using InjectedTests.Abstractions;
 using InjectedTests.Extensibility;
+using InjectedTests.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -28,9 +29,9 @@ public sealed class HostBootstrapper :
         return this;
     }
 
-    void IConfigurableDependencies.ConfigureDependencies(Action<IServiceCollection> configure)
+    void IConfigurableDependencies.ConfigureDependencies(Action<IDependencyBuilder> configure)
     {
-        state.Configure(b => b.HostBuilder.ConfigureServices(configure));
+        state.Configure(b => b.HostBuilder.ConfigureServices(s => configure(new ServiceDependencyBuilder(s))));
     }
 
     void IConfigurableServices.ConfigureServices(Action<IServiceCollection> configure)

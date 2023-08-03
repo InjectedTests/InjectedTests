@@ -1,6 +1,5 @@
 ﻿using InjectedTests.Abstractions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using InjectedTests.Internal;
 
 namespace InjectedTests;
 
@@ -72,7 +71,10 @@ public static class InitializationExtensions
 
     private static InitializerBuilder TryAddDependencies<T1, T2>(this InitializerBuilder builder)
     {
-        builder.Services.TryAddTransient<InitializerDependencies<T1, T2>>();
+        var definition = DependencyDefinition
+            .CreateTransient<InitializerDependencies<T1, T2>, InitializerDependencies<T1, T2>>();
+
+        builder.Dependencies.TryAdd(definition);
         return builder;
     }
 

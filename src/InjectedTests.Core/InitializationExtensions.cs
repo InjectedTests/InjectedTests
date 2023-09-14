@@ -1,4 +1,5 @@
 ﻿using InjectedTests.Abstractions;
+using InjectedTests.Extensibility;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -64,9 +65,17 @@ public static class InitializationExtensions
 
     public static async ValueTask InitializeAsync(this IServiceProvider services)
     {
-        foreach (var initializer in services.GetServices<IInitializer>())
+        var scope = services.CreateScope();
+        try
         {
-            await initializer.InitializeAsync().ConfigureAwait(false);
+            foreach (var initializer in scope.ServiceProvider.GetServices<IInitializer>())
+            {
+                await initializer.InitializeAsync().ConfigureAwait(false);
+            }
+        }
+        finally
+        {
+            await scope.TryDisposeAsync().ConfigureAwait(false);
         }
     }
 

@@ -31,7 +31,14 @@ public sealed class InitializerTest : IAsyncLifetime
     public void Initialize_InitializeWithoutDependencies_InitializerCalled()
     {
         Given_Bootstrapper_InitializerWithoutDependenciesConfigured();
-        Then_InitializerWithoutDependencies_Called();
+        Then_Initializer_Called();
+    }
+
+    [Fact]
+    public void Initialize_ScopedDependencies_InitializerCalled()
+    {
+        Given_Bootstrapper_InitializerWithScopedDependencyConfigured();
+        Then_Initializer_Called();
     }
 
     [Fact]
@@ -49,12 +56,19 @@ public sealed class InitializerTest : IAsyncLifetime
         bootstrapper.ConfigureInitializer(b => b.With(() => isInitialized = true));
     }
 
+    private void Given_Bootstrapper_InitializerWithScopedDependencyConfigured()
+    {
+        bootstrapper
+            .ConfigureServices(s => s.TryAddScoped(p => this))
+            .ConfigureInitializer(b => b.With<InitializerTest>(t => t.isInitialized = true));
+    }
+
     private void Given_Bootstrapper_EventInitializerConfigured(int eventValue)
     {
         bootstrapper.ConfigureInitializer(b => b.With<List<int>>(l => l.Add(eventValue)));
     }
 
-    private void Then_InitializerWithoutDependencies_Called()
+    private void Then_Initializer_Called()
     {
         Assert.Empty(Events);
         Assert.True(isInitialized);

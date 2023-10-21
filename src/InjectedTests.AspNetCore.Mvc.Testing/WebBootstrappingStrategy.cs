@@ -3,7 +3,7 @@
 namespace InjectedTests;
 
 internal sealed class WebBootstrappingStrategy<T> :
-    IBootstrappingStrategy<WebBootstrapperBuilder<T>, BootstrappedWebApplication<T>>
+    IBootstrappingStrategy<WebBootstrapperBuilder, BootstrappedWebApplication>
     where T : class
 {
     private WebBootstrappingStrategy()
@@ -12,15 +12,15 @@ internal sealed class WebBootstrappingStrategy<T> :
 
     public static WebBootstrappingStrategy<T> Instance { get; } = new();
 
-    public WebBootstrapperBuilder<T> CreateConfiguration() => new();
+    public WebBootstrapperBuilder CreateConfiguration() => new WebBootstrapperBuilder<T>();
 
-    public ValueTask<BootstrappedWebApplication<T>> BootstrapAsync(WebBootstrapperBuilder<T> configuration)
+    public ValueTask<BootstrappedWebApplication> BootstrapAsync(WebBootstrapperBuilder configuration)
     {
-        return new(new BootstrappedWebApplication<T>(configuration));
+        return new(configuration.Build());
     }
 
-    public IServiceProvider GetServiceProvider(BootstrappedWebApplication<T> bootstrapped)
+    public IServiceProvider GetServiceProvider(BootstrappedWebApplication bootstrapped)
     {
-        return bootstrapped.Factory.Services;
+        return bootstrapped.Services;
     }
 }

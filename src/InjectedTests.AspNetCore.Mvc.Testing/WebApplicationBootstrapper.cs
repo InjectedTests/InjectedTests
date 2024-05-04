@@ -15,6 +15,7 @@ public sealed class WebApplicationBootstrapper<T> : WebApplicationBootstrapper
 
 public abstract class WebApplicationBootstrapper :
     IConfigurableBootstrapper,
+    IInitializableBootstrapper,
     IServiceProvider,
     IAsyncDisposable
 {
@@ -39,6 +40,11 @@ public abstract class WebApplicationBootstrapper :
     void IConfigurableBootstrapper.ConfigureServices(Action<IServiceCollection> configure)
     {
         ConfigureHost(b => b.ConfigureServices(configure));
+    }
+
+    void IInitializableBootstrapper.ConfigureInitializer(Action<IInitializerBuilder> configure)
+    {
+        ((IConfigurableBootstrapper)this).ConfigureInitializer(configure);
     }
 
     public async ValueTask DisposeAsync()

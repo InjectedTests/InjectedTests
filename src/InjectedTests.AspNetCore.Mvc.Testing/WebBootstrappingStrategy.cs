@@ -19,8 +19,8 @@ internal sealed class WebBootstrappingStrategy<T> :
         return new(configuration.Build());
     }
 
-    public IServiceProvider GetServiceProvider(BootstrappedWebApplication bootstrapped)
+    public ValueTask InitializeAsync(BootstrappedWebApplication bootstrapped)
     {
-        return bootstrapped.Services;
+        return bootstrapped.Services.InitializeAsync();
     }
 }

@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InjectedTests.Core\InjectedTests.Core.csproj" />
+    <ProjectReference Include="..\InjectedTests.Extensions.DependencyInjection\InjectedTests.Extensions.DependencyInjection.csproj" />
   </ItemGroup>
 
 </Project>

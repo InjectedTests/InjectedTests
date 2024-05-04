@@ -1,6 +1,9 @@
-﻿using InjectedTests.Abstractions;
+﻿namespace InjectedTests.Extensibility;
 
-namespace InjectedTests.Internal;
+internal interface IInitializer
+{
+    ValueTask InitializeAsync();
+}
 
 internal sealed class Initializer : IInitializer
 {

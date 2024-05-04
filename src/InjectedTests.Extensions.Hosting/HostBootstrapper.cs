@@ -7,6 +7,7 @@ namespace InjectedTests;
 
 public sealed class HostBootstrapper :
     IConfigurableBootstrapper,
+    IInitializableBootstrapper,
     IServiceProvider,
     IAsyncDisposable
 {
@@ -30,6 +31,11 @@ public sealed class HostBootstrapper :
     void IConfigurableBootstrapper.ConfigureServices(Action<IServiceCollection> configure)
     {
         state.Configure(b => b.HostBuilder.ConfigureServices(configure));
+    }
+
+    void IInitializableBootstrapper.ConfigureInitializer(Action<IInitializerBuilder> configure)
+    {
+        ((IConfigurableBootstrapper)this).ConfigureInitializer(configure);
     }
 
     public HostBootstrapper DisableAutoRun()

@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\InjectedTests.Test\BootstrapperTestBase.cs" Link="BootstrapperTestBase.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\InjectedTests.AspNetCore.Mvc.Testing\InjectedTests.AspNetCore.Mvc.Testing.csproj" />
     <ProjectReference Include="..\InjectedTests.DummyApi\InjectedTests.DummyApi.csproj" />
   </ItemGroup>

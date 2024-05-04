@@ -6,5 +6,5 @@ public interface IBootstrappingStrategy<TConfiguration, TBootstrapped>
 
     ValueTask<TBootstrapped> BootstrapAsync(TConfiguration configuration);
 
-    IServiceProvider GetServiceProvider(TBootstrapped bootstrapped);
+    ValueTask InitializeAsync(TBootstrapped bootstrapped);
 }

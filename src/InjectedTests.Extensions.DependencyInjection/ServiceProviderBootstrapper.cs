@@ -21,7 +21,7 @@ public sealed class ServiceProviderBootstrapper :
 
     private static ServiceProviderOptions DefaultOptions => new()
     {
-        ValidateOnBuild = true,
+        ValidateOnBuild = false,
         ValidateScopes = true
     };
 

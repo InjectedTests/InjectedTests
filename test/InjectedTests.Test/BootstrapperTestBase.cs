@@ -7,6 +7,7 @@ public abstract class BootstrapperTestBase : IAsyncLifetime
     private TestService service;
 
     protected abstract IConfigurableBootstrapper ConfigurableBootstrapper { get; }
+    protected abstract IInitializableBootstrapper InitializableBootstrapper { get; }
     protected abstract IAsyncDisposable BootstrapperDisposable { get; }
     protected abstract IServiceProvider ServiceProvider { get; }
 
@@ -68,7 +69,7 @@ public abstract class BootstrapperTestBase : IAsyncLifetime
 
     private void Given_Bootstrapper_ServiceInitializerConfigured()
     {
-        ConfigurableBootstrapper.ConfigureInitializer(b => b.With<TestService>(Helper_InitializeService));
+        InitializableBootstrapper.ConfigureInitializer(b => b.With<TestService>(Helper_InitializeService));
     }
 
     private void When_Bootstrapper_ResolveService()

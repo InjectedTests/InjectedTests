@@ -59,7 +59,7 @@ public sealed class InitializerTest : IAsyncLifetime
     private void Given_Bootstrapper_InitializerWithScopedDependencyConfigured()
     {
         bootstrapper
-            .ConfigureServices(s => s.TryAddScoped(p => this))
+            .ConfigureServices(s => s.TryAddScoped(_ => this))
             .ConfigureInitializer(b => b.With<InitializerTest>(t => t.isInitialized = true));
     }
 

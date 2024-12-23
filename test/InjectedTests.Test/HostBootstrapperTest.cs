@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting.Internal;
-
-namespace InjectedTests;
+﻿namespace InjectedTests;
 
 public sealed class HostBootstrapperTest : BootstrapperTestBase
 {
@@ -18,6 +15,7 @@ public sealed class HostBootstrapperTest : BootstrapperTestBase
     private readonly List<string> hostedServiceEvents = new();
 
     protected override IConfigurableBootstrapper ConfigurableBootstrapper => bootstrapper;
+    protected override IInitializableBootstrapper InitializableBootstrapper => bootstrapper;
     protected override IAsyncDisposable BootstrapperDisposable => bootstrapper;
     protected override IServiceProvider ServiceProvider => bootstrapper;
 

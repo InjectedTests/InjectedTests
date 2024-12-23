@@ -28,5 +28,8 @@ internal sealed class HostBootstrappingStrategy : IBootstrappingStrategy<HostBoo
         }
     }
 
-    public IServiceProvider GetServiceProvider(BootstrappedHost bootstrapped) => bootstrapped.Host.Services;
+    public ValueTask InitializeAsync(BootstrappedHost bootstrapped)
+    {
+        return bootstrapped.Host.Services.InitializeAsync();
+    }
 }

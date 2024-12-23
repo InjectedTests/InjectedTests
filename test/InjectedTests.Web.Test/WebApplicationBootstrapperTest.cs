@@ -1,9 +1,6 @@
-﻿using System.Net;
-using Microsoft.Extensions.DependencyInjection;
+﻿namespace InjectedTests;
 
-namespace InjectedTests;
-
-public sealed class WebApplicationBootstrapperTest : IAsyncLifetime
+public sealed class WebApplicationBootstrapperTest : BootstrapperTestBase
 {
     #region state
 
@@ -18,21 +15,12 @@ public sealed class WebApplicationBootstrapperTest : IAsyncLifetime
 
     private HttpStatusCode? statusCode;
 
+    protected override IConfigurableBootstrapper ConfigurableBootstrapper => bootstrapper;
+    protected override IInitializableBootstrapper InitializableBootstrapper => bootstrapper;
+    protected override IAsyncDisposable BootstrapperDisposable => bootstrapper;
+    protected override IServiceProvider ServiceProvider => bootstrapper;
+
     private HttpClient Client => bootstrapper.Client;
-
-    #endregion
-
-    #region lifecycle
-
-    public Task InitializeAsync()
-    {
-        return Task.CompletedTask;
-    }
-
-    public async Task DisposeAsync()
-    {
-        await bootstrapper.DisposeAsync();
-    }
 
     #endregion
 

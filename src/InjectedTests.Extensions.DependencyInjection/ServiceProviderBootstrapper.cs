@@ -6,6 +6,7 @@ namespace InjectedTests;
 
 public sealed class ServiceProviderBootstrapper :
     IConfigurableBootstrapper,
+    IInitializableBootstrapper,
     IServiceProvider,
     IAsyncDisposable
 {
@@ -18,9 +19,9 @@ public sealed class ServiceProviderBootstrapper :
         state = new(new ServiceProviderBootstrappingStrategy(options));
     }
 
-    private static ServiceProviderOptions DefaultOptions => new ServiceProviderOptions
+    private static ServiceProviderOptions DefaultOptions => new()
     {
-        ValidateOnBuild = true,
+        ValidateOnBuild = false,
         ValidateScopes = true
     };
 
@@ -31,6 +32,11 @@ public sealed class ServiceProviderBootstrapper :
     void IConfigurableBootstrapper.ConfigureServices(Action<IServiceCollection> configure)
     {
         state.Configure(configure);
+    }
+
+    void IInitializableBootstrapper.ConfigureInitializer(Action<IInitializerBuilder> configure)
+    {
+        ((IConfigurableBootstrapper)this).ConfigureInitializer(configure);
     }
 
     public async ValueTask DisposeAsync()

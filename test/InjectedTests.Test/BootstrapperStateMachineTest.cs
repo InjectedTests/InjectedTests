@@ -8,7 +8,6 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
     private const string Bootstrapped = "bootstrapped";
     private const string Configuring = "configuring";
     private const string Disposed = "disposed";
-    private const string DisposedInitializerScope = "disposedScope";
     private const string Initializing = "initializing";
 
     private readonly List<(string Id, int Index)> events = new();
@@ -53,7 +52,7 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
         Given_Bootstrapper_BootstrapCompletesImmediately();
         When_State_Configure();
         When_State_GetBootstrapped();
-        Then_Events_Are(Bootstrapping, Configuring, Bootstrapped, Initializing, DisposedInitializerScope);
+        Then_Events_Are(Bootstrapping, Configuring, Bootstrapped, Initializing);
     }
 
     [Fact]
@@ -118,7 +117,7 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
         Given_Bootstrapper_BootstrapCompletesImmediately();
         Given_Initializer_Throws();
         When_State_GetBootstrappedThrows();
-        Then_Events_Are(Bootstrapping, Bootstrapped, Initializing, DisposedInitializerScope, Disposed);
+        Then_Events_Are(Bootstrapping, Bootstrapped, Initializing, Disposed);
     }
 
     #region given, when, then
@@ -234,36 +233,9 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
             return configuration;
         }
 
-        public IServiceProvider GetServiceProvider(TestTarget bootstrapped)
+        public ValueTask InitializeAsync(TestTarget bootstrapped)
         {
-            return bootstrapped;
-        }
-    }
-
-    private sealed class TestTarget : IServiceProvider, IInitializer, IAsyncDisposable, IServiceScopeFactory
-    {
-        private readonly BootstrapperStateMachineTest test;
-        private readonly int index;
-
-        public TestTarget(BootstrapperStateMachineTest test, int index)
-        {
-            this.test = test;
-            this.index = index;
-        }
-
-        public object GetService(Type serviceType)
-        {
-            return serviceType switch
-            {
-                _ when serviceType == typeof(IServiceScopeFactory) => this,
-                _ when serviceType == typeof(IEnumerable<IInitializer>) => new IInitializer[] { this },
-                _ => null,
-            };
-        }
-
-        public ValueTask InitializeAsync()
-        {
-            AddEvent(Initializing);
+            bootstrapped.AddEvent(Initializing);
 
             if (test.InitializeThrows)
             {
@@ -272,10 +244,17 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
 
             return default;
         }
+    }
 
-        public IServiceScope CreateScope()
+    private sealed class TestTarget : IAsyncDisposable
+    {
+        private readonly BootstrapperStateMachineTest test;
+        private readonly int index;
+
+        public TestTarget(BootstrapperStateMachineTest test, int index)
         {
-            return new TestScope(this);
+            this.test = test;
+            this.index = index;
         }
 
         public ValueTask DisposeAsync()
@@ -287,23 +266,6 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
         public void AddEvent(string id)
         {
             test.Helper_AddEvent(id, index);
-        }
-    }
-
-    private sealed class TestScope : IServiceScope
-    {
-        private readonly TestTarget target;
-
-        public TestScope(TestTarget target)
-        {
-            this.target = target;
-        }
-
-        public IServiceProvider ServiceProvider => target;
-
-        public void Dispose()
-        {
-            target.AddEvent(DisposedInitializerScope);
         }
     }
 

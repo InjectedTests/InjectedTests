@@ -10,7 +10,13 @@ public static class ScopingExtensions
     public static T ConfigureTestScope<T>(this T bootstrapper)
         where T : IConfigurableBootstrapper
     {
-        return bootstrapper.ConfigureServices<T>(s => s.TryAddSingleton<TestScope>());
+        return bootstrapper.ConfigureServices<T>(s => s.AddTestScope());
+    }
+
+    public static IServiceCollection AddTestScope(this IServiceCollection services)
+    {
+        services.TryAddSingleton<TestScope>();
+        return services;
     }
 
     public static IServiceProvider GetScopedServiceProvider(this IServiceProvider rootProvider)

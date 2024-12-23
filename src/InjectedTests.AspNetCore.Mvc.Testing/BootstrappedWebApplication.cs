@@ -2,23 +2,36 @@
 
 namespace InjectedTests;
 
-internal sealed class BootstrappedWebApplication<T> : IAsyncDisposable
+internal sealed class BootstrappedWebApplication<T> : BootstrappedWebApplication
     where T : class
 {
+    private readonly WebApplicationFactory<T> factory;
     private readonly WebApplicationFactoryClientOptions clientOptions;
 
     public BootstrappedWebApplication(WebBootstrapperBuilder<T> builder)
     {
-        Factory = builder.Factory;
+        factory = builder.Factory;
         clientOptions = builder.ClientOptions;
     }
 
-    public WebApplicationFactory<T> Factory { get; }
+    public override IServiceProvider Services => factory.Services;
 
-    public HttpClient CreateClient() => Factory.CreateClient(clientOptions);
-
-    public ValueTask DisposeAsync()
+    public override HttpClient CreateClient()
     {
-        return Factory.DisposeAsync();
+        return factory.CreateClient(clientOptions);
     }
+
+    public override ValueTask DisposeAsync()
+    {
+        return factory.DisposeAsync();
+    }
+}
+
+internal abstract class BootstrappedWebApplication : IAsyncDisposable
+{
+    public abstract IServiceProvider Services { get; }
+
+    public abstract HttpClient CreateClient();
+
+    public abstract ValueTask DisposeAsync();
 }

@@ -76,7 +76,7 @@ public sealed partial class BootstrapperStateMachine<TConfiguration, TBootstrapp
         var bootstrapped = await bootstrapper.BootstrapAsync(configuration).ConfigureAwait(false);
         try
         {
-            await bootstrapper.GetServiceProvider(bootstrapped).InitializeAsync().ConfigureAwait(false);
+            await bootstrapper.InitializeAsync(bootstrapped).ConfigureAwait(false);
             return new(bootstrapped);
         }
         catch

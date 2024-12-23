@@ -19,8 +19,11 @@ internal sealed class ServiceProviderBootstrappingStrategy
     {
         var provider = configuration.BuildServiceProvider(options);
 
-        return new ValueTask<IServiceProvider>(provider);
+        return new(provider);
     }
 
-    public IServiceProvider GetServiceProvider(IServiceProvider bootstrapped) => bootstrapped;
+    public ValueTask InitializeAsync(IServiceProvider bootstrapped)
+    {
+        return bootstrapped.InitializeAsync();
+    }
 }

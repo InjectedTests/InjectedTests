@@ -26,21 +26,21 @@ public sealed class BasicTest
     [Test]
     public void BasicUsage()
     {
-        Assert.AreEqual(0, Service.DoWork());
+        Assert.That(Service.DoWork(), Is.EqualTo(0));
     }
 
     [Test]
     public void WithAdditionalConfiguration()
     {
         bootstrapper.ConfigureServices(s => s.TryAddTransient(p => new TestInitialValue { Initial = 42 }));
-        Assert.AreEqual(42, Service.DoWork());
+        Assert.That(Service.DoWork(), Is.EqualTo(42));
     }
 
     [Test]
     public void WithInitialization()
     {
         bootstrapper.ConfigureInitializer(b => b.With<TestService>(s => s.DoWork()));
-        Assert.AreEqual(1, Service.DoWork());
+        Assert.That(Service.DoWork(), Is.EqualTo(1));
     }
 
     private sealed class TestService : IDisposable

@@ -2,17 +2,16 @@
 using Autofac.Core;
 using InjectedTests.Abstractions;
 using InjectedTests.Extensibility;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace InjectedTests;
 
 public sealed class ContainerBootstrapper :
-    IConfigurableBootstrapper,
+    IInitializableBootstrapper,
     IComponentContext,
     IServiceProvider,
     IAsyncDisposable
 {
-    private readonly BootstrapperStateMachine<ContainerBootstrapperBuilder, IContainer> state;
+    private readonly BootstrapperStateMachine<ContainerBuilder, IContainer> state;
 
     public ContainerBootstrapper()
     {
@@ -23,16 +22,16 @@ public sealed class ContainerBootstrapper :
 
     public ContainerBootstrapper ConfigureContainer(Action<ContainerBuilder> configure)
     {
-        state.Configure(b => b.Configure(configure));
+        state.Configure(b => configure(b));
         return this;
     }
 
-    void IConfigurableBootstrapper.ConfigureServices(Action<IServiceCollection> configure)
+    void IInitializableBootstrapper.ConfigureInitializer(Action<IInitializerBuilder> configure)
     {
-        state.Configure(b => b.Configure(configure));
+        ConfigureContainer(b => configure(new InitializerBuilder(b)));
     }
 
-    object IComponentContext.ResolveComponent(ResolveRequest request)
+    object IComponentContext.ResolveComponent(in ResolveRequest request)
     {
         return state.Bootstrapped.ResolveComponent(request);
     }

@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace InjectedTests;
@@ -41,26 +40,11 @@ public sealed class ContainerBootstrapperTest : IAsyncDisposable
         Then_Service_Disposed();
     }
 
-    [Fact]
-    public async Task Dispose_DisposeAfterResolveScoped_ScopedServiceDisposed()
-    {
-        Given_Bootstrapper_ScopedServiceConfigured();
-        When_Bootstrapper_ResolveScopedService();
-        await When_Bootstrapper_DisposedAsync();
-        Then_Service_Disposed();
-    }
-
     #region given, when, then
 
     private void Given_Bootstrapper_ServiceConfigured()
     {
         bootstrapper.ConfigureContainer(b => b.RegisterType<TestService>().SingleInstance());
-    }
-
-    private void Given_Bootstrapper_ScopedServiceConfigured()
-    {
-        bootstrapper.ConfigureTestScope();
-        bootstrapper.ConfigureContainer(b => b.RegisterType<TestService>().InstancePerLifetimeScope());
     }
 
     private void Given_Bootstrapper_ServiceInitializerConfigured()
@@ -71,11 +55,6 @@ public sealed class ContainerBootstrapperTest : IAsyncDisposable
     private void When_Bootstrapper_ResolveService()
     {
         service = bootstrapper.Resolve<TestService>();
-    }
-
-    private void When_Bootstrapper_ResolveScopedService()
-    {
-        service = bootstrapper.GetRequiredScopedService<TestService>();
     }
 
     private async Task When_Bootstrapper_DisposedAsync()

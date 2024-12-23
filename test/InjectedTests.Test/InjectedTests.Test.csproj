@@ -5,9 +5,14 @@
     <ProjectReference Include="..\..\src\InjectedTests.Extensions.Hosting\InjectedTests.Extensions.Hosting.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <PackageReference Update="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+    <PackageReference Update="Microsoft.Extensions.Hosting" Version="8.0.1" />
   </ItemGroup>
 
 </Project>

@@ -3,15 +3,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace InjectedTests.Extensibility;
 
-internal sealed class InitializerBuilder : IInitializerBuilder
+internal sealed class InitializerBuilder(IServiceCollection services) : IInitializerBuilder
 {
-    private readonly IServiceCollection services;
-
-    public InitializerBuilder(IServiceCollection services)
-    {
-        this.services = services;
-    }
-
     public IInitializerBuilder EnsureDependency<T>()
          where T : class
     {

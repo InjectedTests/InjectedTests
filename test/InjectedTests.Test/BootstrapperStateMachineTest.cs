@@ -10,8 +10,8 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
     private const string Disposed = "disposed";
     private const string Initializing = "initializing";
 
-    private readonly List<(string Id, int Index)> events = new();
-    private readonly List<Task<TestTarget>> bootstrappingTasks = new();
+    private readonly List<(string Id, int Index)> events = [];
+    private readonly List<Task<TestTarget>> bootstrappingTasks = [];
     private readonly BootstrapperStateMachine<TestTarget, TestTarget> state;
     private TestTarget bootstrapped;
     private IReadOnlyList<TestTarget> bootstrappedInstances;
@@ -29,12 +29,12 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
         state = new(new TestBootstrappingStrategy(this));
     }
 
-    public Task InitializeAsync()
+    public ValueTask InitializeAsync()
     {
-        return Task.CompletedTask;
+        return default;
     }
 
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         if (bootstrapped != null)
         {
@@ -64,7 +64,7 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
     }
 
     [Fact]
-    public async Task Sequence_BootstrapTwiceConcurrently_OnlyOneInstanceReturned()
+    public async ValueTask Sequence_BootstrapTwiceConcurrently_OnlyOneInstanceReturned()
     {
         When_State_StartBootstrapping();
         When_State_StartBootstrapping();
@@ -74,7 +74,7 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
     }
 
     [Fact]
-    public async Task Sequence_DisposeBeforeBootstrappingCompletes_ObjectDisposedException()
+    public async ValueTask Sequence_DisposeBeforeBootstrappingCompletes_ObjectDisposedException()
     {
         When_State_StartBootstrapping();
         await When_Bootstrapper_BootstrappingStarted();
@@ -84,7 +84,7 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
     }
 
     [Fact]
-    public async Task Sequence_DisposeBeforeBootstrappingCompletes_InstanceDisposed()
+    public async ValueTask Sequence_DisposeBeforeBootstrappingCompletes_InstanceDisposed()
     {
         When_State_StartBootstrapping();
         await When_Bootstrapper_BootstrappingStarted();
@@ -95,7 +95,7 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
     }
 
     [Fact]
-    public async Task Dispose_DisposeWithoutBootstrap_DisposeNotCalled()
+    public async ValueTask Dispose_DisposeWithoutBootstrap_DisposeNotCalled()
     {
         Given_Bootstrapper_BootstrapCompletesImmediately();
         await When_State_Dispose();
@@ -103,7 +103,7 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
     }
 
     [Fact]
-    public async Task Dispose_DisposeWithBootstrap_DisposeCalled()
+    public async ValueTask Dispose_DisposeWithBootstrap_DisposeCalled()
     {
         Given_Bootstrapper_BootstrapCompletesImmediately();
         When_State_GetBootstrapped();
@@ -152,7 +152,7 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
         Assert.Throws<Exception>(When_State_GetBootstrapped);
     }
 
-    private async Task When_State_Dispose()
+    private async ValueTask When_State_Dispose()
     {
         await state.DisposeAsync();
     }
@@ -167,7 +167,7 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
         FinishBootstrappingSource.SetResult(true);
     }
 
-    private async Task When_BootstrappingTasks_AllComplete()
+    private async ValueTask When_BootstrappingTasks_AllComplete()
     {
         bootstrappedInstances = await Task.WhenAll(bootstrappingTasks);
     }
@@ -194,7 +194,7 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
         Assert.All(bootstrappedInstances, i => Assert.Same(first, i));
     }
 
-    private async Task Then_BootstrappingTasks_AllThrowObjectDisposedException()
+    private async ValueTask Then_BootstrappingTasks_AllThrowObjectDisposedException()
     {
         Assert.NotEmpty(bootstrappingTasks);
         foreach (var task in bootstrappingTasks)
@@ -208,15 +208,9 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
         events.Add((id, index));
     }
 
-    private sealed class TestBootstrappingStrategy : IBootstrappingStrategy<TestTarget, TestTarget>
+    private sealed class TestBootstrappingStrategy(BootstrapperStateMachineTest test) : IBootstrappingStrategy<TestTarget, TestTarget>
     {
-        private readonly BootstrapperStateMachineTest test;
         private int targetCount;
-
-        public TestBootstrappingStrategy(BootstrapperStateMachineTest test)
-        {
-            this.test = test;
-        }
 
         public TestTarget CreateConfiguration()
         {
@@ -239,24 +233,15 @@ public sealed class BootstrapperStateMachineTest : IAsyncLifetime
 
             if (test.InitializeThrows)
             {
-                throw new Exception("Initialize throws.");
+                throw new("Initialize throws.");
             }
 
             return default;
         }
     }
 
-    private sealed class TestTarget : IAsyncDisposable
+    private sealed class TestTarget(BootstrapperStateMachineTest test, int index) : IAsyncDisposable
     {
-        private readonly BootstrapperStateMachineTest test;
-        private readonly int index;
-
-        public TestTarget(BootstrapperStateMachineTest test, int index)
-        {
-            this.test = test;
-            this.index = index;
-        }
-
         public ValueTask DisposeAsync()
         {
             AddEvent(Disposed);

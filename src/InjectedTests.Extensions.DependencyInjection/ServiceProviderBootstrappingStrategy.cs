@@ -3,16 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace InjectedTests;
 
-internal sealed class ServiceProviderBootstrappingStrategy
+internal sealed class ServiceProviderBootstrappingStrategy(ServiceProviderOptions options)
     : IBootstrappingStrategy<IServiceCollection, IServiceProvider>
 {
-    private readonly ServiceProviderOptions options;
-
-    public ServiceProviderBootstrappingStrategy(ServiceProviderOptions options)
-    {
-        this.options = options;
-    }
-
     public IServiceCollection CreateConfiguration() => new ServiceCollection();
 
     public ValueTask<IServiceProvider> BootstrapAsync(IServiceCollection configuration)

@@ -4,14 +4,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace InjectedTests;
 
-internal sealed class BootstrappedHost : IAsyncDisposable
+internal sealed class BootstrappedHost(IHost host) : IAsyncDisposable
 {
-    public BootstrappedHost(IHost host)
-    {
-        Host = host;
-    }
-
-    public IHost Host { get; }
+    public IHost Host => host;
 
     public async ValueTask DisposeAsync()
     {

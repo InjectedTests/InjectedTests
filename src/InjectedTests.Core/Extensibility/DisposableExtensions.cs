@@ -2,8 +2,7 @@
 
 public static class DisposableExtensions
 {
-    public static async ValueTask TryDisposeAsync<T>(this T instance)
-        where T : class
+    public static async ValueTask TryDisposeAsync(this object instance)
     {
         switch (instance)
         {

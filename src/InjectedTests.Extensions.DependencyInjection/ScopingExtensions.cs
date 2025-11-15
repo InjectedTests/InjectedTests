@@ -30,15 +30,9 @@ public static class ScopingExtensions
         return rootProvider.GetScopedServiceProvider().GetRequiredService<T>();
     }
 
-    private sealed class TestScope : IAsyncDisposable
+    private sealed class TestScope(IServiceScopeFactory scopeFactory) : IAsyncDisposable
     {
-        private readonly IServiceScopeFactory scopeFactory;
         private IServiceScope? scope;
-
-        public TestScope(IServiceScopeFactory scopeFactory)
-        {
-            this.scopeFactory = scopeFactory;
-        }
 
         public IServiceProvider ServiceProvider => (scope ??= scopeFactory.CreateScope()).ServiceProvider;
 

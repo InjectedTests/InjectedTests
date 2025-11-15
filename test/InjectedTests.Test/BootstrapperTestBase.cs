@@ -15,12 +15,12 @@ public abstract class BootstrapperTestBase : IAsyncLifetime
 
     #region lifecycle
 
-    public Task InitializeAsync()
+    public ValueTask InitializeAsync()
     {
-        return Task.CompletedTask;
+        return default;
     }
 
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         await BootstrapperDisposable.DisposeAsync();
     }
@@ -37,7 +37,7 @@ public abstract class BootstrapperTestBase : IAsyncLifetime
     }
 
     [Fact]
-    public async Task Dispose_DisposeAfterResolve_ServiceDisposed()
+    public async ValueTask Dispose_DisposeAfterResolve_ServiceDisposed()
     {
         Given_Bootstrapper_ServiceConfigured();
         When_Bootstrapper_ResolveService();
@@ -46,7 +46,7 @@ public abstract class BootstrapperTestBase : IAsyncLifetime
     }
 
     [Fact]
-    public async Task Dispose_DisposeAfterResolveScoped_ScopedServiceDisposed()
+    public async ValueTask Dispose_DisposeAfterResolveScoped_ScopedServiceDisposed()
     {
         Given_Bootstrapper_ScopedServiceConfigured();
         When_Bootstrapper_ResolveScopedService();
@@ -82,7 +82,7 @@ public abstract class BootstrapperTestBase : IAsyncLifetime
         service = ServiceProvider.GetRequiredScopedService<TestService>();
     }
 
-    protected async Task When_Bootstrapper_DisposedAsync()
+    protected async ValueTask When_Bootstrapper_DisposedAsync()
     {
         await BootstrapperDisposable.DisposeAsync();
     }
@@ -97,7 +97,7 @@ public abstract class BootstrapperTestBase : IAsyncLifetime
         Assert.True(service.Initialized);
     }
 
-    private void Helper_InitializeService(TestService service)
+    private static void Helper_InitializeService(TestService service)
     {
         service.Initialized = true;
     }

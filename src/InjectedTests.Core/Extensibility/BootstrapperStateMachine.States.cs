@@ -71,7 +71,7 @@ partial class BootstrapperStateMachine<TConfiguration, TBootstrapped>
             throw new InvalidOperationException("Configuration is only possible before bootstrapping.");
         }
 
-        public async override ValueTask<TBootstrapped> EnsureBootstrappedAsync()
+        public override async ValueTask<TBootstrapped> EnsureBootstrappedAsync()
         {
             var bootstrapped = await Task.ConfigureAwait(false);
             return bootstrapped.Instance;
@@ -88,14 +88,9 @@ partial class BootstrapperStateMachine<TConfiguration, TBootstrapped>
         }
     }
 
-    private sealed class BootstrappedState : BootstrapperState
+    private sealed class BootstrappedState(TBootstrapped instance) : BootstrapperState
     {
-        public BootstrappedState(TBootstrapped instance)
-        {
-            Instance = instance;
-        }
-
-        public TBootstrapped Instance { get; }
+        public TBootstrapped Instance => instance;
 
         public override void Configure(Action<TConfiguration> configure)
         {

@@ -11,12 +11,7 @@ public sealed class HostBootstrapper :
     IServiceProvider,
     IAsyncDisposable
 {
-    private readonly BootstrapperStateMachine<HostBootstrapperBuilder, BootstrappedHost> state;
-
-    public HostBootstrapper()
-    {
-        state = new(HostBootstrappingStrategy.Instance);
-    }
+    private readonly BootstrapperStateMachine<HostBootstrapperBuilder, BootstrappedHost> state = new(HostBootstrappingStrategy.Instance);
 
     public IHost Host => state.Bootstrapped.Host;
 

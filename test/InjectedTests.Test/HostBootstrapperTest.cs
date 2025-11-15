@@ -12,7 +12,7 @@ public sealed class HostBootstrapperTest : BootstrapperTestBase
 
     private readonly HostBootstrapper bootstrapper = new();
 
-    private readonly List<string> hostedServiceEvents = new();
+    private readonly List<string> hostedServiceEvents = [];
 
     protected override IConfigurableBootstrapper ConfigurableBootstrapper => bootstrapper;
     protected override IInitializableBootstrapper InitializableBootstrapper => bootstrapper;
@@ -39,7 +39,7 @@ public sealed class HostBootstrapperTest : BootstrapperTestBase
     }
 
     [Fact]
-    public async Task Run_DisposeBootstrapper_HostedServiceStoppedAndDisposed()
+    public async ValueTask Run_DisposeBootstrapper_HostedServiceStoppedAndDisposed()
     {
         Given_Bootstrapper_HostedServiceConfigured();
         When_Bootstrapper_ResolveHostedService();
@@ -48,7 +48,7 @@ public sealed class HostBootstrapperTest : BootstrapperTestBase
     }
 
     [Fact]
-    public async Task Run_DisposeBootstrapperWithoutAutoRun_HostedServiceDisposed()
+    public async ValueTask Run_DisposeBootstrapperWithoutAutoRun_HostedServiceDisposed()
     {
         Given_Bootstrapper_HostedServiceConfigured();
         Given_Bootstrapper_AutoRunDisabled();
@@ -58,7 +58,7 @@ public sealed class HostBootstrapperTest : BootstrapperTestBase
     }
 
     [Fact]
-    public async Task Run_DisposeBootstrapperAfterManuallyStarting_HostedServiceStoppedAndDisposed()
+    public async ValueTask Run_DisposeBootstrapperAfterManuallyStarting_HostedServiceStoppedAndDisposed()
     {
         Given_Bootstrapper_HostedServiceConfigured();
         Given_Bootstrapper_AutoRunDisabled();
@@ -105,7 +105,7 @@ public sealed class HostBootstrapperTest : BootstrapperTestBase
 
     private void Given_Bootstrapper_AddHostConfiguration()
     {
-        bootstrapper.ConfigureHost(b => b.ConfigureHostConfiguration(c => c.AddInMemoryCollection(new[] { new KeyValuePair<string, string>(TestConfigurationKey, TestConfigurationValue) })));
+        bootstrapper.ConfigureHost(b => b.ConfigureHostConfiguration(c => c.AddInMemoryCollection([new(TestConfigurationKey, TestConfigurationValue)])));
     }
 
     private void Given_Bootstrapper_UseOriginalLifetime()
@@ -128,7 +128,7 @@ public sealed class HostBootstrapperTest : BootstrapperTestBase
         bootstrapper.ConfigureHost(b => b.UseEnvironment(Environments.Staging));
     }
 
-    private async Task When_Bootstrapper_StartAsync()
+    private async ValueTask When_Bootstrapper_StartAsync()
     {
         await bootstrapper.Host.StartAsync();
     }
@@ -177,15 +177,8 @@ public sealed class HostBootstrapperTest : BootstrapperTestBase
         hostedServiceEvents.Add(id);
     }
 
-    private sealed class TestHostedService : IHostedService, IAsyncDisposable
+    private sealed class TestHostedService(HostBootstrapperTest test) : IHostedService, IAsyncDisposable
     {
-        private readonly HostBootstrapperTest test;
-
-        public TestHostedService(HostBootstrapperTest test)
-        {
-            this.test = test;
-        }
-
         public Task StartAsync(CancellationToken cancellationToken)
         {
             test.Helper_AddHostedServiceEvent(Started);

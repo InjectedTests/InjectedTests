@@ -2,17 +2,11 @@
 
 namespace InjectedTests;
 
-internal sealed class BootstrappedWebApplication<T> : BootstrappedWebApplication
+internal sealed class BootstrappedWebApplication<T>(WebBootstrapperBuilder<T> builder) : BootstrappedWebApplication
     where T : class
 {
-    private readonly WebApplicationFactory<T> factory;
-    private readonly WebApplicationFactoryClientOptions clientOptions;
-
-    public BootstrappedWebApplication(WebBootstrapperBuilder<T> builder)
-    {
-        factory = builder.Factory;
-        clientOptions = builder.ClientOptions;
-    }
+    private readonly WebApplicationFactory<T> factory = builder.Factory;
+    private readonly WebApplicationFactoryClientOptions clientOptions = builder.ClientOptions;
 
     public override IServiceProvider Services => factory.Services;
 

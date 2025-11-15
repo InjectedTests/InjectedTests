@@ -6,8 +6,8 @@ public sealed class WaitableSynchronizationContextTest
 {
     #region state
 
-    private Func<ValueTask<IReadOnlyList<SynchronizationContext>>> _work;
-    private IReadOnlyList<SynchronizationContext> _contexts;
+    private Func<ValueTask<IReadOnlyList<SynchronizationContext>>> work;
+    private IReadOnlyList<SynchronizationContext> contexts;
 
     #endregion
 
@@ -53,37 +53,37 @@ public sealed class WaitableSynchronizationContextTest
 
     private void Given_Work_Synchronous()
     {
-        _work = Helper_ExecuteSynchronousWork;
+        work = Helper_ExecuteSynchronousWork;
     }
 
     private void Given_Work_Asynchronous()
     {
-        _work = Helper_ExecuteAsynchronousWork;
+        work = Helper_ExecuteAsynchronousWork;
     }
 
     private void Given_Work_NestedContext()
     {
-        _work = Helper_ExecuteNestedAsynchronousWork;
+        work = Helper_ExecuteNestedAsynchronousWork;
     }
 
     private void Given_Work_SynchronousException()
     {
-        _work = Helper_ExecuteSynchronousException;
+        work = Helper_ExecuteSynchronousException;
     }
 
     private void Given_Work_AsynchronousException()
     {
-        _work = Helper_ExecuteAsynchronousException;
+        work = Helper_ExecuteAsynchronousException;
     }
 
     private void When_Context_ExecuteWork()
     {
-        _contexts = WaitableSynchronizationContext.ExecuteOnContext(_work, CancellationToken.None);
+        contexts = WaitableSynchronizationContext.ExecuteOnContext(work, CancellationToken.None);
     }
 
     private void Then_SynchronizationContexts_AllCorrect()
     {
-        Assert.All(_contexts, c => Assert.IsType<WaitableSynchronizationContext>(c));
+        Assert.All(contexts, c => Assert.IsType<WaitableSynchronizationContext>(c));
     }
 
     private void Then_Context_ExecuteWorkThrowsException()
@@ -92,7 +92,7 @@ public sealed class WaitableSynchronizationContextTest
         Assert.Equal("boom", exception.Message);
     }
 
-    private ValueTask<IReadOnlyList<SynchronizationContext>> Helper_ExecuteSynchronousWork()
+    private static ValueTask<IReadOnlyList<SynchronizationContext>> Helper_ExecuteSynchronousWork()
     {
         var contexts = new List<SynchronizationContext>
         {
@@ -102,7 +102,7 @@ public sealed class WaitableSynchronizationContextTest
         return new(contexts);
     }
 
-    private async ValueTask<IReadOnlyList<SynchronizationContext>> Helper_ExecuteAsynchronousWork()
+    private static async ValueTask<IReadOnlyList<SynchronizationContext>> Helper_ExecuteAsynchronousWork()
     {
         var contexts = new List<SynchronizationContext>
         {
@@ -116,7 +116,7 @@ public sealed class WaitableSynchronizationContextTest
         return contexts;
     }
 
-    private ValueTask<IReadOnlyList<SynchronizationContext>> Helper_ExecuteNestedAsynchronousWork()
+    private static ValueTask<IReadOnlyList<SynchronizationContext>> Helper_ExecuteNestedAsynchronousWork()
     {
         var contexts = new List<SynchronizationContext>
         {
@@ -133,16 +133,16 @@ public sealed class WaitableSynchronizationContextTest
         return new(contexts);
     }
 
-    private ValueTask<IReadOnlyList<SynchronizationContext>> Helper_ExecuteSynchronousException()
+    private static ValueTask<IReadOnlyList<SynchronizationContext>> Helper_ExecuteSynchronousException()
     {
-        throw new Exception("boom");
+        throw new("boom");
     }
 
-    private async ValueTask<IReadOnlyList<SynchronizationContext>> Helper_ExecuteAsynchronousException()
+    private static async ValueTask<IReadOnlyList<SynchronizationContext>> Helper_ExecuteAsynchronousException()
     {
         await Task.Delay(TimeSpan.FromMilliseconds(1));
 
-        throw new Exception("boom");
+        throw new("boom");
     }
 
     #endregion

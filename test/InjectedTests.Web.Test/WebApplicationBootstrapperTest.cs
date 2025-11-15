@@ -25,14 +25,14 @@ public sealed class WebApplicationBootstrapperTest : BootstrapperTestBase
     #endregion
 
     [Fact]
-    public async Task Client_GetRootPath_CorrectStatusCode()
+    public async ValueTask Client_GetRootPath_CorrectStatusCode()
     {
         await When_Client_GetUri();
         Then_Reponse_HasStatusCode(HttpStatusCode.OK);
     }
 
     [Fact]
-    public async Task ConfigureServices_GetRootPath_CorrectStatusCode()
+    public async ValueTask ConfigureServices_GetRootPath_CorrectStatusCode()
     {
         Given_Application_ReturnsStatusCode(HttpStatusCode.NoContent);
         await When_Client_GetUri();
@@ -58,7 +58,7 @@ public sealed class WebApplicationBootstrapperTest : BootstrapperTestBase
         bootstrapper.ConfigureClient(o => o.BaseAddress = differentBaseAddress);
     }
 
-    private async Task When_Client_GetUri()
+    private async ValueTask When_Client_GetUri()
     {
         using var response = await Client.GetAsync(uriBuilder.Uri);
 

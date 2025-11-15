@@ -4,8 +4,8 @@ namespace InjectedTests.Internal;
 
 internal sealed class WaitableSynchronizationContext : SynchronizationContext, IDisposable
 {
-    private readonly ManualResetEventSlim _resetEvent = new();
-    private readonly ConcurrentQueue<WorkItem> _workQueue = new();
+    private readonly ManualResetEventSlim resetEvent = new();
+    private readonly ConcurrentQueue<WorkItem> workQueue = new();
 
     public static void ExecuteOnContext(Func<ValueTask> work, CancellationToken cancellationToken)
     {
@@ -55,7 +55,7 @@ internal sealed class WaitableSynchronizationContext : SynchronizationContext, I
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (_workQueue.TryDequeue(out var work))
+            if (workQueue.TryDequeue(out var work))
             {
                 work.Callback(work.State);
             }
@@ -70,13 +70,13 @@ internal sealed class WaitableSynchronizationContext : SynchronizationContext, I
 
     public void Dispose()
     {
-        _resetEvent.Dispose();
+        resetEvent.Dispose();
     }
 
     public override void Post(SendOrPostCallback d, object? state)
     {
-        _workQueue.Enqueue(new(d, state));
-        _resetEvent.Set();
+        workQueue.Enqueue(new(d, state));
+        resetEvent.Set();
     }
 
     public override SynchronizationContext CreateCopy()
@@ -86,23 +86,22 @@ internal sealed class WaitableSynchronizationContext : SynchronizationContext, I
 
     private void Wait(CancellationToken cancellationToken)
     {
-        _resetEvent.Reset();
+        resetEvent.Reset();
 
-        if (_workQueue.IsEmpty)
+        if (workQueue.IsEmpty)
         {
-            _resetEvent.Wait(cancellationToken);
+            resetEvent.Wait(cancellationToken);
         }
     }
 
-    private readonly struct WorkItem
+
+#if NET8_0_OR_GREATER
+    private readonly record struct WorkItem(SendOrPostCallback Callback, object? State);
+#else
+    private readonly struct WorkItem(SendOrPostCallback callback, object? state)
     {
-        public WorkItem(SendOrPostCallback callback, object? state)
-        {
-            Callback = callback;
-            State = state;
-        }
-
-        public SendOrPostCallback Callback { get; }
-        public object? State { get; }
+        public SendOrPostCallback Callback => callback;
+        public object? State => state;
     }
+#endif
 }

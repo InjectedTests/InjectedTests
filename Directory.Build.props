@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <RootNamespace>InjectedTests</RootNamespace>
-    <LangVersion>11.0</LangVersion>
+    <LangVersion>14.0</LangVersion>
     <MSBuildCopyContentTransitively>true</MSBuildCopyContentTransitively>
     <ImplicitUsings>enable</ImplicitUsings>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>

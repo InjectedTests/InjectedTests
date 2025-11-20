@@ -15,9 +15,9 @@ public sealed class ContainerBootstrapperTest : IAsyncDisposable
 
     #region lifecycle
 
-    public async ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
-        await bootstrapper.DisposeAsync();
+        return bootstrapper.DisposeAsync();
     }
 
     #endregion

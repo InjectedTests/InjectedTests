@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Autofac.Core;
 using InjectedTests.Extensibility;
 
 namespace InjectedTests;

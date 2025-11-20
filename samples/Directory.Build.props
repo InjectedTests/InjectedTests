@@ -4,8 +4,8 @@
   <Import Project="..\Directory.Build.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net48</TargetFrameworks>
-    <InjectedTestsVersion>2.0.0</InjectedTestsVersion>
+    <TargetFrameworks>net10.0;net48</TargetFrameworks>
+    <InjectedTestsVersion>2.0.1</InjectedTestsVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

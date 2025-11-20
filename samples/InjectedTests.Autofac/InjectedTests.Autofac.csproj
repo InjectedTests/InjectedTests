@@ -4,8 +4,12 @@
     <UseXunit>true</UseXunit>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="8.2.0" />
+    <PackageReference Include="Autofac" Version="9.0.0" />
     <PackageReference Include="InjectedTests.Core" Version="$(InjectedTestsVersion)" />
   </ItemGroup>
   

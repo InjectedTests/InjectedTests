@@ -4,5 +4,9 @@
     <UseXunit>true</UseXunit>
     <UseExtensionsDependencyInjection>true</UseExtensionsDependencyInjection>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
   
 </Project>

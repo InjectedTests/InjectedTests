@@ -1,9 +1,8 @@
-﻿<Project Sdk="MSTest.Sdk/3.7.0">
+﻿<Project Sdk="MSTest.Sdk/4.0.2">
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0</TargetFrameworks>
+    <TargetFrameworks>net10.0</TargetFrameworks>
     <UseExtensionsDependencyInjection>true</UseExtensionsDependencyInjection>
-    <UseTestSdk>false</UseTestSdk>
   </PropertyGroup>
   
 </Project>

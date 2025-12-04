@@ -18,8 +18,7 @@ public sealed partial class BootstrapperStateMachine<TConfiguration, TBootstrapp
     public TBootstrapped Bootstrapped => Volatile.Read(ref state) switch
     {
         BootstrappedState bootstrapped => bootstrapped.Instance,
-        { } s => WaitableSynchronizationContext
-            .ExecuteOnContext(s.EnsureBootstrappedAsync, CancellationToken.None),
+        { } s => LiveWait.RunToEnd(s.EnsureBootstrappedAsync),
     };
 
     public void Configure(Action<TConfiguration> configure) => Volatile
